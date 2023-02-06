@@ -8,6 +8,36 @@ The build consists of an Active Directory domain controller and both Windows and
 
 The code can be easily modified to suit specific lab environment by modifying the vars/main.yml.
 
+## Playbook Structure
+
+```
+ansible-ad-lab
+├── scripts
+│   └── powershell
+|     ├── ad_scripts
+|     └── general_scripts
+├── tasks
+│   ├── vmware_create_ad
+|   ├── vmware_create_windows
+|   └── vmware_create_linux
+├── vars
+|   └── main.yml
+├── inventory_small.ini
+├── inventory_medium.ini
+├── inventory_large.ini
+├── inventory_custom.ini
+├── main.yml
+├── requirements.txt
+└── README.md
+```
+- `scripts/`: directory containing scripts and other files required by the playbook.
+- `tasks/`: directory containing tasks that will be run by the playbook.
+- `vars/`: directory to save variable files.
+- `inventory_x.ini`: inventory of machines to create.
+- `main.yml`: main playbook.
+- `requirements.txt`: dependancies for playbook to run.
+- `readme.md`: instructions and links related to this playbook.
+
 ## Getting Started
 
 ### Dependencies
