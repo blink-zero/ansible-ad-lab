@@ -52,7 +52,7 @@ ansible-ad-lab
         * CentOS 7.9
         * Ubuntu 20.04
 * Ansible
-    * community.vmware collection
+    * with community.vmware collection
 
 ### Configuring and Running the Playbook
 
@@ -63,27 +63,16 @@ On your Ansible Control Node:
 git clone https://github.com/blink-zero/ansible-ad-lab.git
 ```
 * Change dir to cloned dir
-```
-cd ansible-ad-lab-creation
-```
 * Install requirements
 ```
 pip install -r requirements.txt
 ```
 * Modify vars/main.yml (See Examples)
-```
-# Modify variables to match your environment
-```
+
 * Modify inventory_custom.ini (See Examples)
-```
-# There are 3 inventory files.
-# Depending on if you want to have a few custom environments or not you can safely remove all but one.
-# These files also contain host variables, Modify the values to match your hardware needs.
-```
+
 * Modify ad_import_users.csv
-```
-# If applicable, modify the script with correct domain name per vars/main.yml.
-```
+
 * Run playbook with inventory file
 ```
 ansible-playbook main.yml -i inventory_custom.ini
