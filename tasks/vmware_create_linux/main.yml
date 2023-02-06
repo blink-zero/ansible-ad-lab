@@ -28,7 +28,7 @@
     customization:
       domain: "{{ domain }}"
       dns_servers:
-        - "{{ dns1 }}"
+        - "{{ groups['dc'][0] }}"
         - "{{ dns2 }}"
       dns_suffix:
         - "{{ domain }}"
