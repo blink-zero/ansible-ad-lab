@@ -85,16 +85,12 @@ ansible-playbook main.yml -i inventory_custom.ini
 ### Executing
 
 ```
+# There are multiple inventory files included. Feel free to modify to your needs.
+
+# Example 1
 ansible-playbook main.yml -i inventory_custom.ini
-```
-```
+# Example 2
 ansible-playbook main.yml -i inventory_small.ini
-```
-```
-ansible-playbook main.yml -i inventory_medium.ini
-```
-```
-ansible-playbook main.yml -i inventory_large.ini
 ```
 
 ### vars/main.yml Configuration (Example)
@@ -144,7 +140,7 @@ dns2: "172.16.1.1"
 
 ## Help
 
-How do I create the 'Golden Images'?
+How do I create the 'Golden Images' VMware Template?
 ```
 Will write up something here soon.
 ```
