@@ -89,6 +89,7 @@ ansible-playbook main.yml -i inventory_custom.ini
 
 # Example 1
 ansible-playbook main.yml -i inventory_custom.ini
+
 # Example 2
 ansible-playbook main.yml -i inventory_small.ini
 ```
