@@ -162,7 +162,7 @@
     - Domain
     - Private
     - Public
-  tags: disable_firewall
+  tags: enable_firewall
   delegate_to: '{{ inventory_hostname }}'
 
 - name: Set Password
