@@ -1,0 +1,1 @@
+Add-ADGroupMember -Identity "Domain Admins" -Members @("t.stark","b.banner")

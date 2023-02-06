@@ -1,0 +1,3 @@
+requests>=2.27.1
+pyvmomi==8.0.0.1.2
+pywinrm==0.4.3
