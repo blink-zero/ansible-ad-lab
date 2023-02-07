@@ -59,12 +59,12 @@ ansible-ad-lab
 On your Ansible Control Node:
 
 * Clone this repo
-```
+```sh
 git clone https://github.com/blink-zero/ansible-ad-lab.git
 ```
 * Change dir to cloned dir
 * Install requirements
-```
+```sh
 pip install -r requirements.txt
 ```
 * Modify vars/main.yml (See Examples)
@@ -74,7 +74,7 @@ pip install -r requirements.txt
 * Modify ad_import_users.csv
 
 * Run playbook with inventory file
-```
+```sh
 ansible-playbook main.yml -i inventory_custom.ini
 ```
 * Enter in passwords when prompted
@@ -84,7 +84,7 @@ ansible-playbook main.yml -i inventory_custom.ini
 
 ### Executing
 
-```
+```sh
 # There are multiple inventory files included. Feel free to modify to your needs.
 
 # Example 1
@@ -96,7 +96,7 @@ ansible-playbook main.yml -i inventory_small.ini
 
 ### vars/main.yml Configuration (Example)
 
-```
+```yaml
 ---
 vcenter_hostname: "vc.example.com"
 vcenter_username: "administrator@vsphere.local"
@@ -127,7 +127,7 @@ dns2: "172.16.1.1"
 
 ### inventory_custom.ini Configuration (Example)
 
-```
+```ini
 [dc]
 172.16.1.20 guest_hostname='2019DC01' guest_vcpu='2' guest_vram='4096' template_name='WIN2019-TMP' vm_guestid='windows9Server64Guest'
 
