@@ -59,12 +59,12 @@ ansible-ad-lab
 On your Ansible Control Node:
 
 * Clone this repo
-```sh
+```bash
 git clone https://github.com/blink-zero/ansible-ad-lab.git
 ```
 * Change dir to cloned dir
 * Install requirements
-```sh
+```bash
 pip install -r requirements.txt
 ```
 * Modify vars/main.yml (See Examples)
@@ -74,7 +74,7 @@ pip install -r requirements.txt
 * Modify ad_import_users.csv
 
 * Run playbook with inventory file
-```sh
+```bash
 ansible-playbook main.yml -i inventory_custom.ini
 ```
 * Enter in passwords when prompted
