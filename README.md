@@ -143,7 +143,7 @@ dns2: "172.16.1.1"
 
 How do I create the 'Golden Images' VMware Template?
 ```
-Will write up something here soon.
+See: https://github.com/vmware-samples/packer-examples-for-vsphere
 ```
 How do I install Ansible?
 ```
