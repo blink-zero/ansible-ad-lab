@@ -16,3 +16,7 @@
 # Variables
 ## Ignore var files
 **/vars/*.yml
+
+# Inventory
+## Ignore inventory files
+*.ini
