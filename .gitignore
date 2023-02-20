@@ -20,3 +20,4 @@
 # Inventory
 ## Ignore inventory files
 **/*.ini
+/inventory_custom.ini
