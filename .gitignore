@@ -18,6 +18,6 @@
 **/vars/*.yml
 
 # Inventory
-## Ignore inventory files
+## Ignore inventory file
 **/*.ini
 /inventory_custom.ini
