@@ -1,0 +1,18 @@
+# ---> Ansible
+*.retry
+
+# MacOS
+## Ignore desktop services files.
+**/.DS_Store
+
+# Certificates and Keys
+## Ignore certificates files.
+**/*.cer
+**/*.crt
+**/*.p7b
+## Ignore public key files
+**/*.pub
+
+# Variables
+## Ignore var files
+**/vars/*.yml
