@@ -1,0 +1,36 @@
+---
+- name: Create Linux Client Virtual Machine/s
+  vmware_guest:
+    hostname: "{{ vsphere_vcenter_hostname }}"
+    username: "{{ vsphere_vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: "{{ vsphere_vcenter_validate_certs }}"
+    datacenter: "{{ vsphere_vcenter_datacenter }}"
+    name: "{{ inventory_guest_hostname }}"
+    folder: "{{ vsphere_vm_folder }}"
+    state: "{{ common_vm_state }}"
+    guest_id: "{{ inventory_vm_guestid }}"
+    esxi_hostname: "{{ vsphere_esxi_host }}"
+    template: "{{ inventory_template_name }}"
+    disk:
+      - size_gb: "{{ common_lin_disk_size }}"
+        type: "{{ vsphere_vm_type }}"
+        datastore: "{{ vsphere_vm_disk_datastore }}"
+    hardware:
+      memory_mb: "{{ inventory_guest_vram }}"
+      num_cpus: "{{ inventory_guest_vcpu }}"
+      scsi: "{{ common_vm_hw_scsi }}"
+    networks:
+      - name: "{{ common_vm_net_name }}"
+        ip: "{{ inventory_hostname }}"
+        netmask: "{{ common_netmask }}"
+        gateway: "{{ common_gateway }}"
+    customization:
+      domain: "{{ ad_domain }}"
+      dns_servers:
+        - "{{ groups['dc'][0] }}"
+        - "{{ common_dns2 }}"
+      dns_suffix:
+        - "{{ ad_domain }}"
+    wait_for_ip_address: True
+  delegate_to: localhost

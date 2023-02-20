@@ -1,53 +1,51 @@
 ---
 - name: Create Windows AD Virtual Machine
   vmware_guest:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
+    hostname: "{{ vsphere_vcenter_hostname }}"
+    username: "{{ vsphere_vcenter_username }}"
     password: "{{ vcenter_password }}"
-    validate_certs: "{{ vcenter_validate_certs }}"
-    datacenter: "{{ vcenter_datacenter }}"
-    name: "{{ guest_hostname }}"
-    folder: "{{ vm_folder }}"
-    state: "{{ vm_state }}"
-    guest_id: "{{ vm_guestid }}"
-    esxi_hostname: "{{ esxi_host }}"
-    template: "{{ template_name }}"
+    validate_certs: "{{ vsphere_vcenter_validate_certs }}"
+    datacenter: "{{ vsphere_vcenter_datacenter }}"
+    folder: "{{ vsphere_vm_folder }}"
+    state: "{{ common_vm_state }}"
+    name: "{{ inventory_guest_hostname }}"
+    esxi_hostname: "{{ vsphere_esxi_host }}"
+    guest_id: "{{ inventory_vm_guestid }}"
+    template: "{{ inventory_template_name }}"
     disk:
-      - size_gb: "{{ disk_size }}"
-        type: thin
-        datastore: "{{ vm_disk_datastore }}"
+      - size_gb: "{{ common_win_disk_size }}"
+        type: "{{ vsphere_vm_type }}"
+        datastore: "{{ vsphere_vm_disk_datastore }}"
     hardware:
-      memory_mb: "{{ guest_vram }}"
-      num_cpus: "{{ guest_vcpu }}"
-      scsi: "{{ vm_hw_scsi }}"
+      memory_mb: "{{ inventory_guest_vram }}"
+      num_cpus: "{{ inventory_guest_vcpu }}"
+      scsi: "{{ common_vm_hw_scsi }}"
     networks:
-      - name: "{{ vm_net_name }}"
+      - name: "{{ common_vm_net_name }}"
         ip: "{{ inventory_hostname }}"
-        netmask: "{{ netmask }}"
-        gateway: "{{ gateway }}"
+        netmask: "{{ common_netmask }}"
+        gateway: "{{ common_gateway }}"
     customization:
       autologoncount: 1
       autologon: true
-      hostname: "{{ guest_hostname }}"
+      hostname: "{{ inventory_guest_hostname }}"
       dns_servers:
-        - "{{ dns1 }}"
-        - "{{ dns2 }}"
-      timezone: "{{ timezone }}"
-      password: "{{ temp_password }}"
+        - "{{ common_dns2 }}"
+      timezone: "{{ common_timezone }}"
+      password: "{{ template_password }}"
       # This powershell script is required for cross vlan WinRM to run the next tasks - Once playbook complete remove the firewall rule if needed
       runonce:
-      - cmd /c echo New-NetFirewallRule -DisplayName "WinRM 5985" -Direction Inbound -LocalPort 5985 -Protocol TCP -RemoteAddress Any -Action Allow > C:\enable-winrm.ps1
-      - powershell.exe -ExecutionPolicy Unrestricted -File C:\enable-winrm.ps1 -ForceNewSSLCert -EnableCredSSP
+      - cmd /c echo New-NetFirewallRule -DisplayName "WinRM 5985" -Direction Inbound -LocalPort 5985 -Protocol TCP -RemoteAddress Any -Action Allow > C:\enable_winrm.ps1
+      - powershell.exe -ExecutionPolicy Unrestricted -File C:\enable_winrm.ps1 -ForceNewSSLCert -EnableCredSSP
     wait_for_customization: yes
     wait_for_ip_address: True
-    state: "{{ vm_state }}"
   delegate_to: localhost
 
 - name: Add host to Ansible inventory
   add_host:
     name: '{{ inventory_hostname }}'
-    ansible_user: '{{ local_admin }}'
-    ansible_password: '{{ temp_password }}'
+    ansible_user: '{{ common_local_admin }}'
+    ansible_password: '{{ template_password }}'
     ansible_connection: winrm
     ansible_winrm_transport: ntlm
     ansible_winrm_server_cert_validation: ignore
@@ -62,8 +60,8 @@
   win_dns_client:
     adapter_names: '*'
     ipv4_addresses:
-    - '{{ upstream_dns_1 }}'
-    - '{{ upstream_dns_2 }}'
+    - '{{ ad_upstream_dns_1 }}'
+    - '{{ ad_upstream_dns_2 }}'
   delegate_to: '{{ inventory_hostname }}'
 
 - name: Stop the time service
@@ -73,7 +71,7 @@
   delegate_to: '{{ inventory_hostname }}'
 
 - name: Set NTP Servers
-  win_shell: 'w32tm /config /syncfromflags:manual /manualpeerlist:"{{ntp_servers}}"'
+  win_shell: 'w32tm /config /syncfromflags:manual /manualpeerlist:"{{ad_ntp_servers}}"'
   delegate_to: '{{ inventory_hostname }}'  
 
 - name: Start the time service
@@ -109,8 +107,8 @@
 
 - name: Create Domain
   win_domain: >
-     dns_domain_name='{{ domain }}'
-     safe_mode_password='{{ recovery_password }}'
+     dns_domain_name='{{ ad_domain }}'
+     safe_mode_password='{{ ad_recovery_password }}'
   register: ad
   delegate_to: "{{ inventory_hostname }}"
 
@@ -129,7 +127,7 @@
   delegate_to: '{{ inventory_hostname }}'
 
 - name: Create reverse DNS zone
-  win_shell: "Add-DnsServerPrimaryZone -NetworkID {{reverse_dns_zone}} -ReplicationScope Forest"
+  win_shell: "Add-DnsServerPrimaryZone -NetworkID {{ad_reverse_dns_zone}} -ReplicationScope Forest"
   delegate_to: "{{ inventory_hostname }}"    
   retries: 30
   delay: 60
@@ -165,10 +163,10 @@
   tags: enable_firewall
   delegate_to: '{{ inventory_hostname }}'
 
-- name: Set Password
+- name: Set New Domain Administrator Password
   win_user:
     name: administrator
-    password: "{{dc_password}}"
+    password: "{{ad_new_domain_admin_password}}"
     state: present
   delegate_to: '{{ inventory_hostname }}'
   ignore_errors: True  

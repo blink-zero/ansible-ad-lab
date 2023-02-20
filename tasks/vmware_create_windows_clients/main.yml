@@ -1,0 +1,71 @@
+---
+- name: Create Windows Server Virtual Machine/s
+  vmware_guest:
+    hostname: "{{ vsphere_vcenter_hostname }}"
+    username: "{{ vsphere_vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: "{{ vsphere_vcenter_validate_certs }}"
+    datacenter: "{{ vsphere_vcenter_datacenter }}"
+    name: "{{ inventory_guest_hostname }}"
+    folder: "{{ vsphere_vm_folder }}"
+    state: "{{ common_vm_state }}"
+    guest_id: "{{ inventory_vm_guestid }}"
+    esxi_hostname: "{{ vsphere_esxi_host }}"
+    template: "{{ inventory_template_name }}"
+    disk:
+      - size_gb: "{{ common_win_disk_size }}"
+        type: "{{ vsphere_vm_type }}"
+        datastore: "{{ vsphere_vm_disk_datastore }}"
+    hardware:
+      memory_mb: "{{ inventory_guest_vram }}"
+      num_cpus: "{{ inventory_guest_vcpu }}"
+      scsi: "{{ common_vm_hw_scsi }}"
+    networks:
+      - name: "{{ common_vm_net_name }}"
+        ip: "{{ inventory_hostname }}"
+        netmask: "{{ common_netmask }}"
+        gateway: "{{ common_gateway }}"
+    customization:
+      hostname: "{{ inventory_guest_hostname }}"
+      domain: "{{ ad_domain }}"
+      dns_servers:
+        - "{{ groups['dc'][0] }}"
+        - "{{ common_dns2 }}"
+      dns_suffix:
+        - "{{ ad_domain }}"
+      timezone: "{{ common_timezone }}"
+      domainadmin: "{{ common_local_admin }}"
+      domainadminpassword: "{{ ad_new_domain_admin_password }}"
+      joindomain: "{{ ad_domain }}"
+      orgname: "{{ ad_domain }}"
+      password: "{{ template_password }}"
+      # This powershell script is required for cross vlan WinRM to run the next tasks - Once playbook complete remove the firewall rule if needed
+      runonce:
+       - cmd /c echo New-NetFirewallRule -DisplayName "WinRM 5985" -Direction Inbound -LocalPort 5985 -Protocol TCP -RemoteAddress Any -Action Allow > C:\enable_winrm.ps1
+       - powershell.exe -ExecutionPolicy Unrestricted -File C:\enable_winrm.ps1 -ForceNewSSLCert -EnableCredSSP
+    wait_for_customization: yes
+    wait_for_ip_address: True
+  delegate_to: localhost
+
+- name: Add host to Ansible inventory
+  add_host:
+    name: '{{ inventory_hostname }}'
+    ansible_user: '{{ common_domain_admin }}'
+    ansible_password: '{{ ad_new_domain_admin_password }}'
+    ansible_connection: winrm
+    ansible_winrm_transport: ntlm
+    ansible_winrm_server_cert_validation: ignore
+    ansible_winrm_port: 5985
+
+- name: Wait for system to become reachable over WinRM
+  wait_for_connection:
+    timeout: 900
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Copy General PowerShell Scripts
+  win_copy:
+    src: scripts/powershell/general_scripts
+    dest: C:/
+
+- name: Install Client Applications
+  win_command: powershell.exe -ExecutionPolicy ByPass -File C:/general_scripts/install_apps_client.ps1
