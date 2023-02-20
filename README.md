@@ -4,9 +4,9 @@ Ansible playbook to automate the creation and configuration of an Active Directo
 
 ## Description
 
-The build consists of an Active Directory domain controller and both Windows and Linux machines. The code streamlines the provisioning and configuration process, enabling users to set up a home or work lab environment quickly and easily. The project is designed for those who want to learn about Active Directory, or for those who need to test and develop solutions for a multi-platform environment. 
+The build consists of an Active Directory domain controller and both Windows and Linux machines. The code streamlines the provisioning and configuration process, enabling users to set up a home or work lab environment quickly and easily. The project is designed for those who want to learn about Active Directory, or for those who need to test and develop solutions for a multi-platform environments.
 
-The code can be easily modified to suit specific lab environment by modifying the vars/main.yml.
+The code can be easily modified to suit specific lab environment by modifying the vars/*.yml files.
 
 ## Playbook Structure
 
@@ -21,22 +21,22 @@ ansible-ad-lab
 |   ├── vmware_create_windows
 |   └── vmware_create_linux
 ├── vars
-|   └── main.yml
-├── inventory_small.ini
-├── inventory_medium.ini
-├── inventory_large.ini
+|   └── *.yml
 ├── inventory_custom.ini
 ├── main.yml
 ├── requirements.txt
+├── config.sh
 └── README.md
+
 ```
 - `scripts/`: directory containing scripts and other files required by the playbook.
 - `tasks/`: directory containing tasks that will be run by the playbook.
-- `vars/`: directory to save variable files.
-- `inventory_x.ini`: inventory of machines to create.
-- `main.yml`: main playbook.
+- `vars/`: directory for yml variable files.
+- `inventory_*.ini`: inventory of machines to create.
+- `main.yml`: main playbook in root folder.
 - `requirements.txt`: dependancies for playbook to run.
 - `readme.md`: instructions and links related to this playbook.
+- `config.sh`: renames example vars files and inventory file.
 
 ## Getting Started
 
@@ -44,37 +44,54 @@ ansible-ad-lab
 
 * VMware vCenter (vSphere) Environment
     * Tested on:
-        * 7.0.1U
-* VMware templated virtual machines
-    * Tested on:
-        * Windows Server 2019
-        * Windows 10
-        * CentOS 7.9
-        * Ubuntu 20.04
-* Ansible
-    * with community.vmware collection
+        * 7.0.1 U
 
-### Configuring and Running the Playbook
+* VMware templated virtual machines
+    * Tested and working with:
+        * Windows
+            * Windows Server 2019 Datacenter
+            * Windows Server 2019 Core
+            * Windows Server 2022 Datacenter
+            * Windows Server 2022 Core
+            * Windows 10 Enterprise
+        * Linux
+            * CentOS 7.9
+            * Ubuntu 18.04
+            * Ubuntu 20.04
+            * Ubuntu 22.04
+* Ansible
+    * [community.vmware collection](https://docs.ansible.com/ansible/latest/collections/community/vmware/index.html)
+    * See requirements.txt for other dependancies
+
+## Running the Playbook
 
 On your Ansible Control Node:
 
 * Clone this repo
-```bash
+```sh
 git clone https://github.com/blink-zero/ansible-ad-lab.git
 ```
 * Change dir to cloned dir
+```sh
+cd ansible-ad-lab
+```
 * Install requirements
-```bash
+```sh
 pip install -r requirements.txt
 ```
-* Modify vars/main.yml (See Examples)
+* Run config.sh to rename example var files and inventory file
+```sh
+chmod +x config.sh
+./config.sh
+```
+* Modify vars/*.yml (See Examples)
 
-* Modify inventory_custom.ini (See Examples)
+* Modify inventory_*.ini (See Examples)
 
 * Modify ad_import_users.csv
 
 * Run playbook with inventory file
-```bash
+```sh
 ansible-playbook main.yml -i inventory_custom.ini
 ```
 * Enter in passwords when prompted
@@ -82,80 +99,102 @@ ansible-playbook main.yml -i inventory_custom.ini
 
 ## Examples
 
-### Executing
+### Executing (Example)
 
 ```sh
-# There are multiple inventory files included. Feel free to modify to your needs.
-
-# Example 1
-ansible-playbook main.yml -i inventory_custom.ini
-
-# Example 2
 ansible-playbook main.yml -i inventory_small.ini
 ```
 
-### vars/main.yml Configuration (Example)
+### vars/ad_vars.yml Configuration (Example)
 
 ```yaml
 ---
-vcenter_hostname: "vc.example.com"
-vcenter_username: "administrator@vsphere.local"
-vcenter_datacenter: "SYD-DC"
-domain: "domain.local"
-local_admin: '.\administrator'
-dc_password: 'P@ssw0rd'
-recovery_password: 'P@ssw0rd'
-reverse_dns_zone: "172.16.1.0/24"
-upstream_dns_1: 8.8.8.8
-upstream_dns_2: 8.8.4.4
-ntp_servers: "0.us.pool.ntp.org,1.us.pool.ntp.org,2.us.pool.ntp.org,3.us.pool.ntp.org"
-vcenter_validate_certs: false
-timezone: "255"
-esxi_host: "192.168.1.20"
-vm_folder: "LAB"
-vm_disk_datastore: "datastore_2TB"
-disk_size: 100
-vm_hw_scsi: "paravirtual"
-vm_state: "poweredon"
-vm_net_name: "Example Network [VLAN 20]"
-vm_net_type: "vmxnet3"
-netmask: "255.255.255.0"
-gateway: "172.16.1.1"
-dns1: "172.16.1.12"
-dns2: "172.16.1.1"
+ad_domain: "lab.example.local"
+ad_new_domain_admin_password: 'R@in!$aG00dThing.'
+ad_ntp_servers: "0.us.pool.ntp.org,1.us.pool.ntp.org,2.us.pool.ntp.org,3.us.pool.ntp.org"
+ad_recovery_password: 'R@in!$aG00dThing.'
+ad_reverse_dns_zone: "172.16.0.0/24"
+ad_upstream_dns_1: 8.8.8.8
+ad_upstream_dns_2: 8.8.4.4
 ```
+### vars/common_vars.yml Configuration (Example)
 
-### inventory_custom.ini Configuration (Example)
+```yaml
+---
+common_dns2: "172.16.0.1"
+common_domain_admin: '{{ad_domain}}\administrator'
+common_gateway: "172.16.0.1"
+common_lin_disk_size: 40
+common_local_admin: '.\administrator'
+common_netmask: "255.255.255.0"
+common_timezone: "255"
+common_vm_hw_scsi: "paravirtual"
+common_vm_net_name: "VM Network"
+common_vm_net_type: "vmxnet3"
+common_vm_state: "poweredon"
+common_win_disk_size: 100
+```
+### vars/vsphere_vars.yml Configuration (Example)
+
+```yaml
+---
+vsphere_esxi_host: "192.168.1.20"
+vsphere_vcenter_datacenter: "Lab Datacenter"
+vsphere_vcenter_hostname: "vcenter.example.local"
+vsphere_vcenter_username: "administrator@vsphere.local"
+vsphere_vcenter_validate_certs: false
+vsphere_vm_disk_datastore: "2TB_Datastore"
+vsphere_vm_folder: "Lab"
+vsphere_vm_type: "thin"
+```
+### inventory_custom.ini Configuration (Example) - Full List of Tested OS below
 
 ```ini
 [dc]
-172.16.1.20 guest_hostname='2019DC01' guest_vcpu='2' guest_vram='4096' template_name='WIN2019-TMP' vm_guestid='windows9Server64Guest'
-
-[win]
-172.16.1.51 guest_hostname='2019SERVER01' guest_vcpu='2' guest_vram='4096' template_name='WIN2019-TMP' vm_guestid='windows9Server64Guest'
-172.16.1.52 guest_hostname='2019SERVER02' guest_vcpu='2' guest_vram='4096' template_name='WIN2019-TMP' vm_guestid='windows9Server64Guest'
-
-[lin]
-172.16.1.53 guest_hostname='COS7SERVER01' guest_vcpu='1' guest_vram='2048' template_name='CENTOS7-TMP' vm_guestid='centos64Guest'
+172.16.0.20 inventory_guest_hostname='2022DC01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-server-2022-datacenter-dexp-v23.01' inventory_vm_guestid='windows9Server64Guest'
+[win_server]
+172.16.0.50 inventory_guest_hostname='2022SERVER01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-server-2022-datacenter-dexp-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.51 inventory_guest_hostname='2022SERVER02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-server-2022-datacenter-core-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.52 inventory_guest_hostname='2019SERVER01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-server-2019-datacenter-dexp-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.53 inventory_guest_hostname='2019SERVER02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-server-2019-datacenter-core-v23.01' inventory_vm_guestid='windows9Server64Guest'
+[win_client]
+172.16.0.101 inventory_guest_hostname='W10CLIENT01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-desktop-10-enterprise-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.102 inventory_guest_hostname='W10CLIENT02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-desktop-10-enterprise-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.103 inventory_guest_hostname='W10CLIENT03' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-desktop-10-enterprise-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.104 inventory_guest_hostname='W10CLIENT04' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-desktop-10-enterprise-v23.01' inventory_vm_guestid='windows9Server64Guest'
+[lin_server]
+172.16.0.61 inventory_guest_hostname='CO7SERVER01' inventory_guest_vcpu='1' inventory_guest_vram='2048' inventory_template_name='linux-centos-7-v23.01' inventory_vm_guestid='centos64Guest'
+172.16.0.62 inventory_guest_hostname='UBUSERVER01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-18.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+172.16.0.63 inventory_guest_hostname='UBUSERVER02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-20.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+172.16.0.64 inventory_guest_hostname='UBUSERVER03' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-22.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+[lin_client]
+172.16.0.201 inventory_guest_hostname='CO7CLIENT01' inventory_guest_vcpu='1' inventory_guest_vram='2048' inventory_template_name='linux-centos-7-v23.01' inventory_vm_guestid='centos64Guest'
+172.16.0.202 inventory_guest_hostname='UBUCLIENT01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-18.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+172.16.0.203 inventory_guest_hostname='UBUCLIENT02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-20.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+172.16.0.204 inventory_guest_hostname='UBUCLIENT03' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-22.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
 ```
 
 ## Help
 
 How do I create the 'Golden Images' VMware Template?
-```
-See: https://github.com/vmware-samples/packer-examples-for-vsphere
-```
+* See: [packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere)
+
 How do I install Ansible?
-```
-Please refer to the Ansible documentation for install guidance: https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html
-```
-Why is Ansible saying X module is missing
+* Please refer to the Ansible documentation for install guidance: [Ansible Install](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+
+Why is Ansible saying X module is missing?
 ```
 Run 'pip install -r requirements.txt' before running playbook
 ```
 
 ## Version History
 
+* v1.1.0
+    * Cleaned up variables
+    * Rebuilt vars files (common, vsphere, ad)
+    * Added Powershell scripts for Client/Server Applications
+    * Split inventory into clients/servers
+    * config.sh added for renaming example var files
 * v1.0.0
     * Initial Release
 

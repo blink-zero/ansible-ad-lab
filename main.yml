@@ -2,19 +2,19 @@
 - name: Setup passwords
   hosts: localhost
   vars_files:
-    - vars/main.yml
+    - vars/vsphere_vars.yml
+    - vars/common_vars.yml
   vars_prompt:
     - name: "vcenter_password"
-      prompt: "Enter password for {{ vcenter_username }} - {{ vcenter_hostname }}"
+      prompt: "Enter password for {{ vsphere_vcenter_username }} - {{ vsphere_vcenter_hostname }}"
       private: yes
-    - name: "local_adminpassword"
-      prompt: "Enter password for Windows local administrator template"
+    - name: "template_password"
+      prompt: "Enter password for local administrator template for user {{ common_local_admin }}"
       private: yes
   tasks:
     - set_fact:
         vcenter_password: "{{ vcenter_password }}"
-        temp_password: "{{ local_adminpassword }}"
-        local_adminpassword: "{{ local_adminpassword }}"
+        template_password: "{{ template_password }}"
 
 - name: Build Windows AD Forest
   hosts: dc
@@ -23,39 +23,78 @@
   collections:
     - community.vmware
   pre_tasks:
-      - include_vars: vars/main.yml
+      - include_vars: vars/vsphere_vars.yml
+      - include_vars: vars/common_vars.yml
+      - include_vars: vars/ad_vars.yml
   vars:
     - vcenter_password: "{{ hostvars['localhost']['vcenter_password'] }}"
-    - temp_password: "{{ hostvars['localhost']['local_adminpassword'] }}"
+    - template_password: "{{ hostvars['localhost']['template_password'] }}"
   tasks:
     - import_tasks: tasks/vmware_create_ad/main.yml
   serial: 1
 
-- name: Build Windows Environment
-  hosts: win
+- name: Build Windows Server/s
+  hosts: win_server
   become: false
   gather_facts: false
   collections:
     - community.vmware
   pre_tasks:
-      - include_vars: vars/main.yml
+      - include_vars: vars/vsphere_vars.yml
+      - include_vars: vars/common_vars.yml
+      - include_vars: vars/ad_vars.yml
   vars:
     - vcenter_password: "{{ hostvars['localhost']['vcenter_password'] }}"
-    - local_adminpassword: "{{ hostvars['localhost']['local_adminpassword'] }}"
+    - template_password: "{{ hostvars['localhost']['template_password'] }}"
   tasks:
-    - import_tasks: tasks/vmware_create_windows/main.yml
+    - import_tasks: tasks/vmware_create_windows_servers/main.yml
   serial: 1
 
-- name: Build Linux Environment
-  hosts: lin
+- name: Build Windows Client/s
+  hosts: win_client
   become: false
   gather_facts: false
   collections:
     - community.vmware
   pre_tasks:
-      - include_vars: vars/main.yml
+      - include_vars: vars/vsphere_vars.yml
+      - include_vars: vars/common_vars.yml
+      - include_vars: vars/ad_vars.yml
+  vars:
+    - vcenter_password: "{{ hostvars['localhost']['vcenter_password'] }}"
+    - template_password: "{{ hostvars['localhost']['template_password'] }}"
+  tasks:
+    - import_tasks: tasks/vmware_create_windows_clients/main.yml
+  serial: 1
+
+- name: Build Linux Server/s
+  hosts: lin_server
+  become: false
+  gather_facts: false
+  collections:
+    - community.vmware
+  pre_tasks:
+      - include_vars: vars/vsphere_vars.yml
+      - include_vars: vars/common_vars.yml
+      - include_vars: vars/ad_vars.yml
   vars:
     - vcenter_password: "{{ hostvars['localhost']['vcenter_password'] }}"
   tasks:
-    - import_tasks: tasks/vmware_create_linux/main.yml
+    - import_tasks: tasks/vmware_create_linux_servers/main.yml
+  serial: 1
+
+- name: Build Linux Client/s
+  hosts: lin_client
+  become: false
+  gather_facts: false
+  collections:
+    - community.vmware
+  pre_tasks:
+      - include_vars: vars/vsphere_vars.yml
+      - include_vars: vars/common_vars.yml
+      - include_vars: vars/ad_vars.yml
+  vars:
+    - vcenter_password: "{{ hostvars['localhost']['vcenter_password'] }}"
+  tasks:
+    - import_tasks: tasks/vmware_create_linux_clients/main.yml
   serial: 1

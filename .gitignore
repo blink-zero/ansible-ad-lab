@@ -19,4 +19,4 @@
 
 # Inventory
 ## Ignore inventory files
-*.ini
+**/*.ini

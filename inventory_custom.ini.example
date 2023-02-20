@@ -1,0 +1,36 @@
+#     #                                        #     #                                 0            
+#     # # #####  ##### #    #   ##   #         ##   ##   ##    ####  #    # # #    # ######  ####  
+#     # # #    #   #   #    #  #  #  #         # # # #  #  #  #    # #    # # ##   # #      #      
+#     # # #    #   #   #    # #    # #         #  #  # #    # #      ###### # # #  # #####   ####  
+ #   #  # #####    #   #    # ###### #         #     # ###### #      #    # # #  # # #           # 
+  # #   # #   #    #   #    # #    # #         #     # #    # #    # #    # # #   ## #      #    # 
+   #    # #    #   #    ####  #    # ######    #     # #    #  ####  #    # # #    # ######  ####  
+
+
+[dc]
+172.16.0.20 inventory_guest_hostname='LT-2022DDC01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-server-2022-datacenter-dexp-v23.01' inventory_vm_guestid='windows9Server64Guest'
+
+[win_server]
+172.16.0.50 inventory_guest_hostname='LT-2022SERVER01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-server-2022-datacenter-dexp-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.51 inventory_guest_hostname='LT-2022SERVER02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-server-2022-datacenter-core-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.52 inventory_guest_hostname='LT-2019SERVER01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-server-2019-datacenter-dexp-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.53 inventory_guest_hostname='LT-2019SERVER02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-server-2019-datacenter-core-v23.01' inventory_vm_guestid='windows9Server64Guest'
+
+[win_client]
+172.16.0.101 inventory_guest_hostname='LT-W10CLIENT01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-desktop-10-enterprise-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.102 inventory_guest_hostname='LT-W10CLIENT02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-desktop-10-enterprise-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.103 inventory_guest_hostname='LT-W10CLIENT03' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-desktop-10-enterprise-v23.01' inventory_vm_guestid='windows9Server64Guest'
+172.16.0.104 inventory_guest_hostname='LT-W10CLIENT04' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='windows-desktop-10-enterprise-v23.01' inventory_vm_guestid='windows9Server64Guest'
+
+[lin_server]
+172.16.0.61 inventory_guest_hostname='LT-CO7SERVER01' inventory_guest_vcpu='1' inventory_guest_vram='2048' inventory_template_name='linux-centos-7-v23.01' inventory_vm_guestid='centos64Guest'
+172.16.0.62 inventory_guest_hostname='LT-UBUSERVER01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-18.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+172.16.0.63 inventory_guest_hostname='LT-UBUSERVER02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-20.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+172.16.0.64 inventory_guest_hostname='LT-UBUSERVER03' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-22.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+
+[lin_client]
+172.16.0.201 inventory_guest_hostname='LT-CO7CLIENT01' inventory_guest_vcpu='1' inventory_guest_vram='2048' inventory_template_name='linux-centos-7-v23.01' inventory_vm_guestid='centos64Guest'
+172.16.0.202 inventory_guest_hostname='LT-UBUCLIENT01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-18.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+172.16.0.203 inventory_guest_hostname='LT-UBUCLIENT02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-20.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+172.16.0.204 inventory_guest_hostname='LT-UBUCLIENT03' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-22.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+

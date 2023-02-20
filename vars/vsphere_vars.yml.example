@@ -1,0 +1,9 @@
+---
+vsphere_esxi_host: "192.168.0.21"
+vsphere_vcenter_datacenter: "Datacenter"
+vsphere_vcenter_hostname: "vc.example.local"
+vsphere_vcenter_username: "administrator@vsphere.local"
+vsphere_vcenter_validate_certs: false
+vsphere_vm_disk_datastore: "Datastore_name"
+vsphere_vm_folder: "Lab"
+vsphere_vm_type: "thin"

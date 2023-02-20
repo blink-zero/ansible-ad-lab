@@ -1,0 +1,10 @@
+---
+ad_domain: "lab.example.local"
+ad_new_domain_admin_password: 'R@in!$aG00dThing.'
+ad_ntp_servers: "0.us.pool.ntp.org,1.us.pool.ntp.org,2.us.pool.ntp.org,3.us.pool.ntp.org"
+ad_recovery_password: 'R@in!$aG00dThing.'
+ad_reverse_dns_zone: "172.16.0.0/24"
+ad_upstream_dns_1: 8.8.8.8
+ad_upstream_dns_2: 8.8.4.4
+
+
