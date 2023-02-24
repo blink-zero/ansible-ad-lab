@@ -34,3 +34,55 @@
         - "{{ ad_domain }}"
     wait_for_ip_address: True
   delegate_to: localhost
+
+- name: Add host to Ansible inventory
+  ansible.builtin.add_host:
+    hostname: '{{ inventory_hostname }}'
+    ansible_user: '{{ common_lin_local_admin }}'
+    ansible_password: '{{ template_password }}'
+    # always trust, don't store keys
+    ansible_ssh_extra_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
+- name: Wait for system to become reachable over SSH
+  wait_for_connection:
+    timeout: 900
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Install GUI (CentOS / RHEL)
+  shell: |
+    yum groupinstall "GNOME Desktop" -y
+    systemctl set-default graphical.target
+  when: inventory_template_name.find("centos") != -1
+  become: yes
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Update and upgrade apt packages (Ubuntu)
+  ansible.builtin.apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 86400
+  when: inventory_template_name.find("ubuntu") != -1
+  become: yes
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Install GUI (Ubuntu) - gnome-shell
+  ansible.builtin.apt:
+    name: gnome-shell
+    state: present
+  when: inventory_template_name.find("ubuntu") != -1
+  become: yes
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Install GUI (Ubuntu) - ubuntu-desktop
+  ansible.builtin.apt:
+    name: ubuntu-desktop
+    state: present
+  when: inventory_template_name.find("ubuntu") != -1
+  become: yes
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Reboot machine
+  ansible.builtin.reboot:
+    msg: "Rebooting..."
+  become: yes
+  delegate_to: '{{ inventory_hostname }}'
