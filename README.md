@@ -60,8 +60,11 @@ ansible-ad-lab
             * Ubuntu 20.04
             * Ubuntu 22.04
 * Ansible
-    * [community.vmware collection](https://docs.ansible.com/ansible/latest/collections/community/vmware/index.html)
     * See requirements.txt for other dependancies
+    * [community.vmware collection](https://docs.ansible.com/ansible/latest/collections/community/vmware/index.html)
+```sh
+ansible-galaxy collection install community.vmware
+```
 
 ## Running the Playbook
 
@@ -102,7 +105,7 @@ ansible-playbook main.yml -i inventory_custom.ini
 ### Executing (Example)
 
 ```sh
-ansible-playbook main.yml -i inventory_small.ini
+ansible-playbook main.yml -i inventory_custom.ini
 ```
 
 ### vars/ad_vars.yml Configuration (Example)
