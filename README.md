@@ -1,4 +1,5 @@
 # Ansible AD (Active Directory) Lab
+<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/blink-zero/ansible-ad-lab?style=for-the-badge"> <img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/blink-zero/ansible-ad-lab?style=for-the-badge"> <img alt="GitHub Release Date" src="https://img.shields.io/badge/Tested%20with%20Ansible%20version-2.9.27-orange?style=for-the-badge">
 
 Ansible playbook to automate the creation and configuration of an Active Directory home and/or work lab environment using VMware. 
 
