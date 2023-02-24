@@ -79,6 +79,7 @@
       - include_vars: vars/ad_vars.yml
   vars:
     - vcenter_password: "{{ hostvars['localhost']['vcenter_password'] }}"
+    - template_password: "{{ hostvars['localhost']['template_password'] }}"
   tasks:
     - import_tasks: tasks/vmware_create_linux_servers/main.yml
   serial: 1
@@ -95,6 +96,7 @@
       - include_vars: vars/ad_vars.yml
   vars:
     - vcenter_password: "{{ hostvars['localhost']['vcenter_password'] }}"
+    - template_password: "{{ hostvars['localhost']['template_password'] }}"
   tasks:
     - import_tasks: tasks/vmware_create_linux_clients/main.yml
   serial: 1
