@@ -3,6 +3,20 @@
 
 Ansible playbook to automate the creation and configuration of an Active Directory home and/or work lab environment using VMware. 
 
+> Note: this project heavily relies on the templates created by [vmware-samples/packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere).
+
+## Table Of Contents
+
+1. [Description](https://github.com/blink-zero/ansible-ad-lab#description)
+1. [Playbook Structure](https://github.com/blink-zero/ansible-ad-lab#playbook-structure)
+1. [Getting Started](https://github.com/blink-zero/ansible-ad-lab#getting-started)
+1. [Dependancies](https://github.com/blink-zero/ansible-ad-lab/tree/v1.3.0-dev#dependencies)
+1. [Running The Playbook](https://github.com/blink-zero/ansible-ad-lab#running-the-playbook)
+1. [Examples](https://github.com/blink-zero/ansible-ad-lab#examples)
+1. [Help](https://github.com/blink-zero/ansible-ad-lab#help)
+1. [Version History](https://github.com/blink-zero/ansible-ad-lab#version-history)
+1. [Acknowledgements](https://github.com/blink-zero/ansible-ad-lab#acknowledgments)
+
 ## Description
 
 The build consists of an Active Directory Domain Controller and both Windows and Linux machines. The code streamlines the provisioning and configuration process, enabling users to set up a home or work lab environment quickly and easily. The project is designed for those who want to learn about Active Directory, or for those who need to test and develop solutions for a multi-platform environments.
@@ -80,7 +94,7 @@ ansible-ad-lab
 
 On your Ansible Control Node:
 
-* Clone this repo
+* Clone [this repo](https://github.com/blink-zero/ansible-ad-lab)
 ```sh
 git clone https://github.com/blink-zero/ansible-ad-lab.git
 ```
@@ -88,20 +102,20 @@ git clone https://github.com/blink-zero/ansible-ad-lab.git
 ```sh
 cd ansible-ad-lab
 ```
-* Install requirements
+* Install [requirements](https://github.com/blink-zero/ansible-ad-lab/blob/main/requirements.txt)
 ```sh
 pip install -r requirements.txt
 ```
-* Run config.sh to rename example var files and inventory file
+* Run [config.sh](https://github.com/blink-zero/ansible-ad-lab/blob/main/config.sh) to rename example var files and inventory file
 ```sh
 chmod +x config.sh
 ./config.sh
 ```
-* Modify vars/*.yml (See Examples)
+* Modify vars/*.yml (See [Examples](https://github.com/blink-zero/ansible-ad-lab#varsad_varsyml-configuration-example))
 
-* Modify inventory_*.ini (See Examples)
+* Modify inventory_custom.ini (See [Example](https://github.com/blink-zero/ansible-ad-lab#inventory_customini-configuration-example---full-list-of-tested-os-below))
 
-* Modify ad_import_users.csv
+* Modify [ad_import_users.csv](https://github.com/blink-zero/ansible-ad-lab/blob/main/scripts/powershell/ad_scripts/ad_import_users.csv)
 
 * Run playbook with inventory file
 ```sh
@@ -198,31 +212,33 @@ vsphere_vm_type: "thin"
 
 > How do I create the 'Golden Images' VMware Template?
 * See: [packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere)
+* Convertion of the created content store images to VM then to templates is required.
 
 > How do I install Ansible?
 * Please refer to the Ansible documentation for install guidance: [Ansible Install](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
 > Why is Ansible saying X module is missing?
-
 * Run `pip install -r requirements.txt` before running playbook
 
 
 ## Version History
-* v1.2.0 (Latest)
-    * Added GUI to Linux Client machines
-        * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS 7
-    * Added Linux Realm join
-        * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS 7
-    * Powershell script folders and files deleted after use
-    * Various code clean up
-* v1.1.0
-    * Cleaned up variables
-    * Rebuilt vars files (common, vsphere, ad)
-    * Added Powershell scripts for Client/Server Applications
-    * Split inventory into clients/servers
-    * config.sh added for renaming example var files
-* v1.0.0
-    * Initial Release
+### v1.2.1 (Latest)
+* Minor readme updates
+### v1.2.0
+* Added GUI to Linux Client machines
+     * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS 7
+* Added Linux Realm join
+     * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS 7
+* Powershell script folders and files deleted after use
+* Various code clean up
+### v1.1.0
+* Cleaned up variables
+* Rebuilt vars files (common, vsphere, ad)
+* Added Powershell scripts for Client/Server Applications
+* Split inventory into clients/servers
+* config.sh added for renaming example var files
+### v1.0.0
+* Initial Release
 
 ## Acknowledgments
 
