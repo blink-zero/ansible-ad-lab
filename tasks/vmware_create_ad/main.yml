@@ -142,16 +142,34 @@
 - name: Copy AD PowerShell Scripts
   win_copy:
     src: scripts/powershell/ad_scripts
-    dest: C:/
+    dest: C:\
 
 - name: Enable Remote Desktop
-  win_command: powershell.exe -ExecutionPolicy ByPass -File C:/general_scripts/enable_rdp.ps1
+  win_command: powershell.exe -ExecutionPolicy ByPass -File C:\general_scripts\enable_rdp.ps1
 
 - name: Import AD Users
-  win_command: powershell.exe -ExecutionPolicy ByPass -File C:/ad_scripts/ad_import_users.ps1
+  win_command: powershell.exe -ExecutionPolicy ByPass -File C:\ad_scripts\ad_import_users.ps1
 
 - name: Add Users to Groups
-  win_command: powershell.exe -ExecutionPolicy ByPass -File C:/ad_scripts/ad_assign_groups.ps1
+  win_command: powershell.exe -ExecutionPolicy ByPass -File C:\ad_scripts\ad_assign_groups.ps1
+
+- name: Remove general_scripts folder
+  win_file:
+    path: C:\general_scripts
+    state: absent
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Remove ad_scripts folder
+  win_file:
+    path: C:\ad_scripts
+    state: absent
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Remove enable_winrm.ps1 file
+  win_file:
+    path: C:\enable_winrm.ps1
+    state: absent
+  delegate_to: '{{ inventory_hostname }}'
 
 - name: Enable firewall for Domain, Public and Private profiles
   win_firewall:
