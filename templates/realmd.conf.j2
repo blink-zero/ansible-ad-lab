@@ -1,0 +1,13 @@
+[active-directory]
+default-client = sssd
+
+[service]
+automatic-install = yes
+
+[users]
+default-home = /home/%u
+default-shell = /bin/bash
+
+[mcbadass.local]
+user-principle = yes
+fully-qualified-names = no

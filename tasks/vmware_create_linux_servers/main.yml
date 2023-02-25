@@ -1,5 +1,5 @@
 ---
-- name: Create Linux Client Virtual Machine/s
+- name: Create Linux Server Virtual Machine/s
   vmware_guest:
     hostname: "{{ vsphere_vcenter_hostname }}"
     username: "{{ vsphere_vcenter_username }}"
@@ -34,3 +34,219 @@
         - "{{ ad_domain }}"
     wait_for_ip_address: True
   delegate_to: localhost
+
+  # Connect via ssh / inventory host in memory
+
+- name: Add host to Ansible inventory
+  ansible.builtin.add_host:
+    hostname: '{{ inventory_hostname }}'
+    ansible_user: '{{ common_lin_local_admin }}'
+    ansible_password: '{{ template_password }}'
+    # always trust, don't store keys
+    ansible_ssh_extra_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
+- name: Wait for system to become reachable over SSH
+  wait_for_connection:
+    timeout: 900
+  delegate_to: '{{ inventory_hostname }}'
+
+  # Join Domain (CentOS 7)
+
+- name: CentOS - Install the epel-release - For python-pip
+  yum:
+    name: epel-release
+    state: present
+  become: true
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: CentOS - Install the required packages
+  yum:
+    name: realmd,sssd,oddjob,oddjob-mkhomedir,adcli,samba-common,samba-common-tools,ntpdate,ntp,python-pip
+    state: present
+  become: true
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: CentOS - Restart realmd
+  service:
+    name: realmd
+    state: restarted
+  become: true
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: CentOS - Install pexpect using pip
+  pip:
+    name: pexpect
+  become: true
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: CentOS - Join system to AD
+  expect:
+    command: /bin/bash -c "/usr/sbin/realm join --user={{ common_domain_admin_simple_name }}@{{ ad_domain }} --computer-ou={{ ad_centos_ou_membership }} {{ ad_domain }}
+    responses:
+      Password for *: "{{ ad_new_domain_admin_password }}"
+  become: true
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: CentOS - Add default_domain_suffix to sssd.conf
+  lineinfile:
+    dest: /etc/sssd/sssd.conf
+    line: 'default_domain_suffix = {{ ad_domain }}'
+    insertafter: '^\[sssd\]'
+  become: true
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: CentOS - Restart sssd
+  service:
+    name: sssd
+    state: restarted
+  become: true
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: CentOS - Allow all users to logon to the system
+  command: /bin/bash -c "/usr/sbin/realm permit --all"
+  when: inventory_template_name.find("centos") != -1
+  become: true
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: CentOS - Add the Domain Admins AD Group to sudoers file
+  lineinfile:
+    dest: /etc/sudoers
+    line: '%domain\ admins@{{ ad_domain }}        ALL=(ALL)       ALL'
+    insertafter: '^%wheel'
+  become: true
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+  # Join Domain (Ubuntu 18.04, 20.04, 22.04)
+
+- name: Ubuntu 18.04 - Install the required packages
+  apt:
+    name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python-pip
+    state: present
+  become: true
+  when: inventory_template_name.find("ubuntu-18.04") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu 20.04 - Install the required packages
+  apt:
+    name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python3-pip
+    state: present
+  become: true
+  when: inventory_template_name.find("ubuntu-20.04") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu 22.04 - Install the required packages
+  apt:
+    name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python3-pip
+    state: present
+  become: true
+  when: inventory_template_name.find("ubuntu-22.04") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Install pexpect using pip
+  pip:
+    name: pexpect
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Copy realmd.conf
+  template: 
+    src: realmd.conf.j2
+    dest: /etc/realmd.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Copy krb5.conf
+  template: 
+    src: krb5.conf.j2
+    dest: /etc/krb5.conf
+    backup: yes
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Discover realm
+  command: /bin/bash -c "/usr/sbin/realm discover {{ ad_domain }}"
+  register: realm_discover_results
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Create kerberos ticket
+  expect:
+    command: /bin/bash -c "/usr/bin/kinit -V {{ common_domain_admin_simple_name }}"
+    responses:
+      (?i)Password: "{{ ad_new_domain_admin_password }}"
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Join system to AD
+  expect:
+    command: /bin/bash -c "/usr/sbin/realm join {{ ad_domain }} --computer-ou='{{ ad_ubu_ou_membership }}' --user={{ common_domain_admin_simple_name }}"
+    responses:
+      (?i)Password: "{{ ad_new_domain_admin_password }}"  
+  ignore_errors: yes
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Add domain admins group to sudoers
+  lineinfile: dest=/etc/sudoers state=present line='%domain\ admins ALL=(ALL:ALL) ALL' regexp='^%domain'
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Copy sssd.conf
+  template:
+    src: sssd.conf.j2
+    dest: /etc/sssd/sssd.conf
+    owner: root
+    group: root
+    mode: 0600
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Copy pam common-session
+  template: 
+    src: common-session.j2
+    dest: /etc/pam.d/common-session
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+
+- name: Ubuntu - Restart realmd
+  service:
+    name: realmd
+    state: restarted
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Restart sssd
+  service:
+    name: sssd
+    state: restarted
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
