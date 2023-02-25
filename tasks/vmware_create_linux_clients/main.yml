@@ -166,3 +166,130 @@
   become: yes
   when: inventory_template_name.find("centos") != -1
   delegate_to: '{{ inventory_hostname }}'
+
+  # Join Domain (Ubuntu 18.04, 20.04, 22.04)
+
+- name: Ubuntu 18.04 - Install the required packages
+  apt:
+    name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python-pip
+    state: present
+  become: true
+  when: inventory_template_name.find("ubuntu-18.04") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu 20.04 - Install the required packages
+  apt:
+    name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python3-pip
+    state: present
+  become: true
+  when: inventory_template_name.find("ubuntu-20.04") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu 22.04 - Install the required packages
+  apt:
+    name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python3-pip
+    state: present
+  become: true
+  when: inventory_template_name.find("ubuntu-22.04") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Install pexpect using pip
+  pip:
+    name: pexpect
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Copy realmd.conf
+  template: 
+    src: realmd.conf.j2
+    dest: /etc/realmd.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Copy krb5.conf
+  template: 
+    src: krb5.conf.j2
+    dest: /etc/krb5.conf
+    backup: yes
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Discover realm
+  command: /bin/bash -c "/usr/sbin/realm discover {{ ad_domain }}"
+  register: realm_discover_results
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Create kerberos ticket
+  expect:
+    command: /bin/bash -c "/usr/bin/kinit -V {{ common_domain_admin_simple_name }}"
+    responses:
+      (?i)Password: "{{ ad_new_domain_admin_password }}"
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Join system to AD
+  expect:
+    command: /bin/bash -c "/usr/sbin/realm join {{ ad_domain }} --computer-ou='{{ ad_ubu_ou_membership }}' --user={{ common_domain_admin_simple_name }}"
+    responses:
+      (?i)Password: "{{ ad_new_domain_admin_password }}"  
+  ignore_errors: yes
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Add domain admins group to sudoers
+  lineinfile: dest=/etc/sudoers state=present line='%domain\ admins ALL=(ALL:ALL) ALL' regexp='^%domain'
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Copy sssd.conf
+  template:
+    src: sssd.conf.j2
+    dest: /etc/sssd/sssd.conf
+    owner: root
+    group: root
+    mode: 0600
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Copy pam common-session
+  template: 
+    src: common-session.j2
+    dest: /etc/pam.d/common-session
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+
+- name: Ubuntu - Restart realmd
+  service:
+    name: realmd
+    state: restarted
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu - Restart sssd
+  service:
+    name: sssd
+    state: restarted
+  become: true
+  when: inventory_template_name.find("ubuntu") != -1
+  delegate_to: '{{ inventory_hostname }}'
