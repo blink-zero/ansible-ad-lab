@@ -171,10 +171,6 @@
   when: inventory_template_name.find("ubuntu") != -1
   delegate_to: '{{ inventory_hostname }}'
 
-- name: Discover realm debug
-  debug: 
-    msg: {{ realm_discover_results.stdout }}
-
 - name: Create kerberos ticket
   expect:
     command: /bin/bash -c "/usr/bin/kinit -V {{ common_domain_admin_simple_name }}"
