@@ -1,6 +1,7 @@
 ---
 common_dns2: "172.16.0.1"
 common_domain_admin: '{{ad_domain}}\administrator'
+common_domain_admin_simple_name: 'administrator'
 common_gateway: "172.16.0.1"
 common_lin_disk_size: 40
 common_local_admin: '.\administrator'
