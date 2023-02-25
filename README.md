@@ -62,6 +62,7 @@ ansible-ad-lab
             * Ubuntu 22.04
 * Ansible
     * See requirements.txt for other dependancies
+    * [sshpass](https://www.redhat.com/sysadmin/ssh-automation-sshpass) may also be required, yum/apt install sshpass
     * [community.vmware collection](https://docs.ansible.com/ansible/latest/collections/community/vmware/index.html)
 ```sh
 ansible-galaxy collection install community.vmware
