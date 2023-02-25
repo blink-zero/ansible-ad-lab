@@ -39,7 +39,6 @@ ansible-ad-lab
 ├── requirements.txt
 ├── config.sh
 └── README.md
-
 ```
 - `scripts/`: directory containing scripts and other files required by the playbook.
 - `tasks/`: directory containing tasks that will be run by the playbook.
