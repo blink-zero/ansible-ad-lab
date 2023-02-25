@@ -3,7 +3,7 @@
 
 Ansible playbook to automate the creation and configuration of an Active Directory home and/or work lab environment using VMware. 
 
-> Note: This playbook heavily relies on the templates created by [vmware-samples/packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere).
+> Note: this project heavily relies on the templates created by [vmware-samples/packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere).
 
 ## Table Of Contents
 
