@@ -63,7 +63,7 @@ ansible-ad-lab
 * Ansible
     * See [requirements.txt](https://github.com/blink-zero/ansible-ad-lab/blob/main/requirements.txt) for other dependancies
     * [sshpass](https://www.redhat.com/sysadmin/ssh-automation-sshpass) may also be required, `yum/apt install sshpass`
-    * [community.vmware collection](https://docs.ansible.com/ansible/latest/collections/community/vmware/index.html) `ansible-galaxy collection install community.vmware`
+    * [community.vmware collection](https://docs.ansible.com/ansible/latest/collections/community/vmware/index.html), `ansible-galaxy collection install community.vmware`
 
 ## Running the Playbook
 
@@ -207,6 +207,7 @@ vsphere_vm_type: "thin"
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
-* [ansible-deploy-vm](https://github.com/blink-zero/ansible-deploy-vm)
+* [blink-zero/ansible-deploy-vm](https://github.com/blink-zero/ansible-deploy-vm)
 * [madlabber/examples](https://github.com/madlabber/examples)
-* [packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere)
+* [vmware-samples/packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere)
+* [tvories/ansible-realmd](https://github.com/tvories/ansible-realmd)
