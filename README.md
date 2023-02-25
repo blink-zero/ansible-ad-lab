@@ -3,6 +3,17 @@
 
 Ansible playbook to automate the creation and configuration of an Active Directory home and/or work lab environment using VMware. 
 
+## Table Of Contents
+
+1. [Description](https://github.com/blink-zero/ansible-ad-lab#description)
+1. [Playbook Structure](https://github.com/blink-zero/ansible-ad-lab#playbook-structure)
+1. [Getting Started](https://github.com/blink-zero/ansible-ad-lab#getting-started)
+1. [Running The Playbook](https://github.com/blink-zero/ansible-ad-lab#running-the-playbook)
+1. [Examples](https://github.com/blink-zero/ansible-ad-lab#examples)
+1. [Help](https://github.com/blink-zero/ansible-ad-lab#help)
+1. [Version History](https://github.com/blink-zero/ansible-ad-lab#version-history)
+1. [Acknowledgements](https://github.com/blink-zero/ansible-ad-lab#acknowledgments)
+
 ## Description
 
 The build consists of an Active Directory Domain Controller and both Windows and Linux machines. The code streamlines the provisioning and configuration process, enabling users to set up a home or work lab environment quickly and easily. The project is designed for those who want to learn about Active Directory, or for those who need to test and develop solutions for a multi-platform environments.
