@@ -212,12 +212,12 @@ vsphere_vm_type: "thin"
 
 > How do I create the 'Golden Images' VMware Template?
 * See: [packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere)
+* Convertion of the created content store images to VM then to templates is required.
 
 > How do I install Ansible?
 * Please refer to the Ansible documentation for install guidance: [Ansible Install](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
 > Why is Ansible saying X module is missing?
-
 * Run `pip install -r requirements.txt` before running playbook
 
 
