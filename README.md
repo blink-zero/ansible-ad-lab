@@ -5,9 +5,9 @@ Ansible playbook to automate the creation and configuration of an Active Directo
 
 ## Description
 
-The build consists of an Active Directory domain controller and both Windows and Linux machines. The code streamlines the provisioning and configuration process, enabling users to set up a home or work lab environment quickly and easily. The project is designed for those who want to learn about Active Directory, or for those who need to test and develop solutions for a multi-platform environments.
+The build consists of an Active Directory Domain Controller and both Windows and Linux machines. The code streamlines the provisioning and configuration process, enabling users to set up a home or work lab environment quickly and easily. The project is designed for those who want to learn about Active Directory, or for those who need to test and develop solutions for a multi-platform environments.
 
-The code can be easily modified to suit specific lab environment by modifying the vars/*.yml files.
+The code can be easily modified to suit specific lab environment by editing the [vars/*.yml](https://github.com/blink-zero/ansible-ad-lab/tree/main/vars) files after running [config.sh](https://github.com/blink-zero/ansible-ad-lab/blob/main/config.sh).
 
 ## Playbook Structure
 
@@ -50,19 +50,19 @@ ansible-ad-lab
 * VMware templated virtual machines
     * Tested and working with:
         * Windows
-            * Windows Server 2019 Datacenter
-            * Windows Server 2019 Core
-            * Windows Server 2022 Datacenter
-            * Windows Server 2022 Core
-            * Windows 10 Enterprise
+            * [Windows Server 2019 Datacenter](https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019)
+            * [Windows Server 2019 Core](https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019)
+            * [Windows Server 2022 Datacenter](https://www.microsoft.com/en-us/evalcenter/download-windows-server-2022)
+            * [Windows Server 2022 Core](https://www.microsoft.com/en-us/evalcenter/download-windows-server-2022)
+            * [Windows 10 Enterprise](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise)
         * Linux
-            * CentOS 7.9
-            * Ubuntu 18.04
-            * Ubuntu 20.04
-            * Ubuntu 22.04
+            * [CentOS 7.9](https://www.centos.org/download/)
+            * [Ubuntu 18.04](https://releases.ubuntu.com/18.04/)
+            * [Ubuntu 20.04](https://releases.ubuntu.com/20.04/)
+            * [Ubuntu 22.04](https://releases.ubuntu.com/22.04/)
 * Ansible
-    * See requirements.txt for other dependancies
-    * [sshpass](https://www.redhat.com/sysadmin/ssh-automation-sshpass) may also be required, yum/apt install sshpass
+    * See [requirements.txt](https://github.com/blink-zero/ansible-ad-lab/blob/main/requirements.txt) for other dependancies
+    * [sshpass](https://www.redhat.com/sysadmin/ssh-automation-sshpass) may also be required, `yum/apt install sshpass`
     * [community.vmware collection](https://docs.ansible.com/ansible/latest/collections/community/vmware/index.html)
 ```sh
 ansible-galaxy collection install community.vmware
@@ -181,13 +181,13 @@ vsphere_vm_type: "thin"
 
 ## Help
 
-How do I create the 'Golden Images' VMware Template?
+> How do I create the 'Golden Images' VMware Template?
 * See: [packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere)
 
-How do I install Ansible?
+> How do I install Ansible?
 * Please refer to the Ansible documentation for install guidance: [Ansible Install](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
-Why is Ansible saying X module is missing?
+> Why is Ansible saying X module is missing?
 ```
 Run 'pip install -r requirements.txt' before running playbook
 ```
