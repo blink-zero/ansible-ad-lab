@@ -34,3 +34,92 @@
         - "{{ ad_domain }}"
     wait_for_ip_address: True
   delegate_to: localhost
+
+  # Connect via ssh / inventory host in memory
+
+- name: Add host to Ansible inventory
+  ansible.builtin.add_host:
+    hostname: '{{ inventory_hostname }}'
+    ansible_user: '{{ common_lin_local_admin }}'
+    ansible_password: '{{ template_password }}'
+    # always trust, don't store keys
+    ansible_ssh_extra_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
+- name: Wait for system to become reachable over SSH
+  wait_for_connection:
+    timeout: 900
+  delegate_to: '{{ inventory_hostname }}'
+
+  # Join Domain (CentOS)
+
+- name: Install the epel-release - For python-pip
+  yum:
+    name: epel-release
+    state: present
+  become: yes
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Install the required packages
+  yum:
+    name: realmd,sssd,oddjob,oddjob-mkhomedir,adcli,samba-common,samba-common-tools,ntpdate,ntp,python-pip
+    state: present
+  become: yes
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Restart realmd
+  service:
+    name: realmd
+    state: restarted
+  become: yes
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Install pexpect using pip
+  pip:
+    name: pexpect
+  become: yes
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Join system to AD
+  expect:
+    command: /bin/bash -c "/usr/sbin/realm join --user={{ common_domain_admin_simple_name }}@{{ ad_domain }} --computer-ou={{ ad_lin_ou_membership }} {{ ad_domain }}
+    responses:
+      Password for *: "{{ ad_new_domain_admin_password }}"
+  become: yes
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Add default_domain_suffix to sssd.conf
+  lineinfile:
+    dest: /etc/sssd/sssd.conf
+    line: 'default_domain_suffix = {{ ad_domain }}'
+    insertafter: '^\[sssd\]'
+  become: yes
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Restart sssd
+  service:
+    name: sssd
+    state: restarted
+  become: yes
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Allow all users to logon to the system
+  command: /bin/bash -c "/usr/sbin/realm permit --all"
+  when: inventory_template_name.find("centos") != -1
+  become: yes
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Add the Domain Admins AD Group to sudoers file
+  lineinfile:
+    dest: /etc/sudoers
+    line: '%domain\ admins@{{ ad_domain }}        ALL=(ALL)       ALL'
+    insertafter: '^%wheel'
+  become: yes
+  when: inventory_template_name.find("centos") != -1
+  delegate_to: '{{ inventory_hostname }}'
