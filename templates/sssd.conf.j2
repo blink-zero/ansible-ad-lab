@@ -3,7 +3,7 @@ domains = {{ ad_domain }}
 config_file_version = 2
 services = nss, pam
 
-[domain/{{ realm_domain }}]
+[domain/{{ ad_domain }}]
 ad_domain = {{ ad_domain }}
 krb5_realm = {{ ad_domain|upper }}
 realmd_tags = manages-system joined-with-adcli
