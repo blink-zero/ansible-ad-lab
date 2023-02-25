@@ -208,7 +208,7 @@ vsphere_vm_type: "thin"
 
 
 ## Version History
-* v1.2.0
+* v1.2.0 (Latest)
     * Added GUI to Linux Client machines
         * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS 7
     * Added Linux Realm join
