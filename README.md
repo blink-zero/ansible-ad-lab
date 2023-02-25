@@ -10,6 +10,7 @@ Ansible playbook to automate the creation and configuration of an Active Directo
 1. [Description](https://github.com/blink-zero/ansible-ad-lab#description)
 1. [Playbook Structure](https://github.com/blink-zero/ansible-ad-lab#playbook-structure)
 1. [Getting Started](https://github.com/blink-zero/ansible-ad-lab#getting-started)
+1. [Dependancies](https://github.com/blink-zero/ansible-ad-lab/tree/v1.3.0-dev#dependencies)
 1. [Running The Playbook](https://github.com/blink-zero/ansible-ad-lab#running-the-playbook)
 1. [Examples](https://github.com/blink-zero/ansible-ad-lab#examples)
 1. [Help](https://github.com/blink-zero/ansible-ad-lab#help)
