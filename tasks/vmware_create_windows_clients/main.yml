@@ -1,5 +1,5 @@
 ---
-- name: Create Windows Server Virtual Machine/s
+- name: Create Windows Client Virtual Machine/s
   vmware_guest:
     hostname: "{{ vsphere_vcenter_hostname }}"
     username: "{{ vsphere_vcenter_username }}"
