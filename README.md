@@ -222,21 +222,21 @@ vsphere_vm_type: "thin"
 
 
 ## Version History
-* v1.2.0 (Latest)
-    * Added GUI to Linux Client machines
-        * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS 7
-    * Added Linux Realm join
-        * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS 7
-    * Powershell script folders and files deleted after use
-    * Various code clean up
-* v1.1.0
-    * Cleaned up variables
-    * Rebuilt vars files (common, vsphere, ad)
-    * Added Powershell scripts for Client/Server Applications
-    * Split inventory into clients/servers
-    * config.sh added for renaming example var files
-* v1.0.0
-    * Initial Release
+### v1.2.0 (Latest)
+* Added GUI to Linux Client machines
+     * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS 7
+* Added Linux Realm join
+     * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS 7
+* Powershell script folders and files deleted after use
+* Various code clean up
+### v1.1.0
+* Cleaned up variables
+* Rebuilt vars files (common, vsphere, ad)
+* Added Powershell scripts for Client/Server Applications
+* Split inventory into clients/servers
+* config.sh added for renaming example var files
+### v1.0.0
+* Initial Release
 
 ## Acknowledgments
 
