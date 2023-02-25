@@ -94,7 +94,7 @@ ansible-ad-lab
 
 On your Ansible Control Node:
 
-* Clone this repo
+* Clone [this repo](https://github.com/blink-zero/ansible-ad-lab)
 ```sh
 git clone https://github.com/blink-zero/ansible-ad-lab.git
 ```
@@ -102,20 +102,20 @@ git clone https://github.com/blink-zero/ansible-ad-lab.git
 ```sh
 cd ansible-ad-lab
 ```
-* Install requirements
+* Install [requirements](https://github.com/blink-zero/ansible-ad-lab/blob/main/requirements.txt)
 ```sh
 pip install -r requirements.txt
 ```
-* Run config.sh to rename example var files and inventory file
+* Run [config.sh](https://github.com/blink-zero/ansible-ad-lab/blob/main/config.sh) to rename example var files and inventory file
 ```sh
 chmod +x config.sh
 ./config.sh
 ```
-* Modify vars/*.yml (See Examples)
+* Modify vars/*.yml (See [Examples](https://github.com/blink-zero/ansible-ad-lab#varsad_varsyml-configuration-example))
 
-* Modify inventory_*.ini (See Examples)
+* Modify inventory_custom.ini (See [Example](https://github.com/blink-zero/ansible-ad-lab#inventory_customini-configuration-example---full-list-of-tested-os-below))
 
-* Modify ad_import_users.csv
+* Modify [ad_import_users.csv](https://github.com/blink-zero/ansible-ad-lab/blob/main/scripts/powershell/ad_scripts/ad_import_users.csv)
 
 * Run playbook with inventory file
 ```sh
