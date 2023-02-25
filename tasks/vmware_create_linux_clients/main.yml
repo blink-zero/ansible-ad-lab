@@ -93,7 +93,7 @@
   become: yes
   delegate_to: '{{ inventory_hostname }}'
 
-  # Join Domain (CentOS)
+  # Join Domain (CentOS 7)
 
 - name: Install the epel-release - For python-pip
   yum:

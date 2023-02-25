@@ -50,7 +50,7 @@
     timeout: 900
   delegate_to: '{{ inventory_hostname }}'
 
-  # Join Domain (CentOS)
+  # Join Domain (CentOS 7)
 
 - name: Install the epel-release - For python-pip
   yum:
@@ -191,7 +191,7 @@
   delegate_to: '{{ inventory_hostname }}'
 
 - name: Add domain admins group to sudoers
-  lineinfile: dest=/etc/sudoers.tmp state=present line='%domain\ admins ALL=(ALL:ALL) ALL' regexp='^%domain'
+  lineinfile: dest=/etc/sudoers state=present line='%domain\ admins ALL=(ALL:ALL) ALL' regexp='^%domain'
   become: true
   when: inventory_template_name.find("ubuntu") != -1
   delegate_to: '{{ inventory_hostname }}'
