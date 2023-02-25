@@ -52,7 +52,7 @@
 
   # Join Domain (CentOS 7)
 
-- name: Install the epel-release - For python-pip
+- name: CentOS - Install the epel-release - For python-pip
   yum:
     name: epel-release
     state: present
@@ -60,7 +60,7 @@
   when: inventory_template_name.find("centos") != -1
   delegate_to: '{{ inventory_hostname }}'
 
-- name: Install the required packages
+- name: CentOS - Install the required packages
   yum:
     name: realmd,sssd,oddjob,oddjob-mkhomedir,adcli,samba-common,samba-common-tools,ntpdate,ntp,python-pip
     state: present
@@ -68,7 +68,7 @@
   when: inventory_template_name.find("centos") != -1
   delegate_to: '{{ inventory_hostname }}'
 
-- name: Restart realmd
+- name: CentOS - Restart realmd
   service:
     name: realmd
     state: restarted
@@ -76,14 +76,14 @@
   when: inventory_template_name.find("centos") != -1
   delegate_to: '{{ inventory_hostname }}'
 
-- name: Install pexpect using pip
+- name: CentOS - Install pexpect using pip
   pip:
     name: pexpect
   become: true
   when: inventory_template_name.find("centos") != -1
   delegate_to: '{{ inventory_hostname }}'
 
-- name: Join system to AD
+- name: CentOS - Join system to AD
   expect:
     command: /bin/bash -c "/usr/sbin/realm join --user={{ common_domain_admin_simple_name }}@{{ ad_domain }} --computer-ou={{ ad_centos_ou_membership }} {{ ad_domain }}
     responses:
@@ -92,7 +92,7 @@
   when: inventory_template_name.find("centos") != -1
   delegate_to: '{{ inventory_hostname }}'
 
-- name: Add default_domain_suffix to sssd.conf
+- name: CentOS - Add default_domain_suffix to sssd.conf
   lineinfile:
     dest: /etc/sssd/sssd.conf
     line: 'default_domain_suffix = {{ ad_domain }}'
@@ -101,7 +101,7 @@
   when: inventory_template_name.find("centos") != -1
   delegate_to: '{{ inventory_hostname }}'
 
-- name: Restart sssd
+- name: CentOS - Restart sssd
   service:
     name: sssd
     state: restarted
@@ -109,13 +109,13 @@
   when: inventory_template_name.find("centos") != -1
   delegate_to: '{{ inventory_hostname }}'
 
-- name: Allow all users to logon to the system
+- name: CentOS - Allow all users to logon to the system
   command: /bin/bash -c "/usr/sbin/realm permit --all"
   when: inventory_template_name.find("centos") != -1
   become: true
   delegate_to: '{{ inventory_hostname }}'
 
-- name: Add the Domain Admins AD Group to sudoers file
+- name: CentOS - Add the Domain Admins AD Group to sudoers file
   lineinfile:
     dest: /etc/sudoers
     line: '%domain\ admins@{{ ad_domain }}        ALL=(ALL)       ALL'
@@ -202,7 +202,7 @@
     dest: /etc/sssd/sssd.conf
     owner: root
     group: root
-    mode: 0644
+    mode: 0600
   become: true
   when: inventory_template_name.find("ubuntu") != -1
   delegate_to: '{{ inventory_hostname }}'
