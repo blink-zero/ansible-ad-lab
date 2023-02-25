@@ -202,6 +202,7 @@ Run 'pip install -r requirements.txt' before running playbook
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
-* [ansible-deploy-vm](https://github.com/blink-zero/ansible-deploy-vm)
+* [blink-zero/ansible-deploy-vm](https://github.com/blink-zero/ansible-deploy-vm)
 * [madlabber/examples](https://github.com/madlabber/examples)
-* [packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere)
+* [vmware-samples/packer-examples-for-vsphere](https://github.com/vmware-samples/packer-examples-for-vsphere)
+* [tvories/ansible-realmd](https://github.com/tvories/ansible-realmd)
