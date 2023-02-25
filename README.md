@@ -194,7 +194,9 @@ Run 'pip install -r requirements.txt' before running playbook
 ## Version History
 * v1.2.0
     * Added GUI to Linux Client machines
-        * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS7
+        * Support for Ubuntu 18.04, 20.04, 22.04 and CentOS 7
+    * Added Linux Realm join
+        * Support for CentOS 7
 * v1.1.0
     * Cleaned up variables
     * Rebuilt vars files (common, vsphere, ad)
