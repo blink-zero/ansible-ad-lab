@@ -29,3 +29,4 @@
 172.16.0.202 inventory_guest_hostname='UBUCLIENT01' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-18.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
 172.16.0.203 inventory_guest_hostname='UBUCLIENT02' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-20.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
 172.16.0.204 inventory_guest_hostname='UBUCLIENT03' inventory_guest_vcpu='2' inventory_guest_vram='4096' inventory_template_name='linux-ubuntu-22.04-lts-v23.01' inventory_vm_guestid='ubuntu64Guest'
+
