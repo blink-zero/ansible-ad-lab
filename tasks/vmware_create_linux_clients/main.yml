@@ -128,7 +128,7 @@
 
 - name: Join system to AD
   expect:
-    command: /bin/bash -c "/usr/sbin/realm join --user={{ common_domain_admin_simple_name }}@{{ ad_domain }} --computer-ou={{ ad_lin_ou_membership }} {{ ad_domain }}
+    command: /bin/bash -c "/usr/sbin/realm join --user={{ common_domain_admin_simple_name }}@{{ ad_domain }} --computer-ou={{ ad_centos_ou_membership }} {{ ad_domain }}
     responses:
       Password for *: "{{ ad_new_domain_admin_password }}"
   become: yes

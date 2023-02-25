@@ -1,5 +1,5 @@
 ---
-- name: Create Linux Client Virtual Machine/s
+- name: Create Linux Server Virtual Machine/s
   vmware_guest:
     hostname: "{{ vsphere_vcenter_hostname }}"
     username: "{{ vsphere_vcenter_username }}"
@@ -85,7 +85,7 @@
 
 - name: Join system to AD
   expect:
-    command: /bin/bash -c "/usr/sbin/realm join --user={{ common_domain_admin_simple_name }}@{{ ad_domain }} --computer-ou={{ ad_lin_ou_membership }} {{ ad_domain }}
+    command: /bin/bash -c "/usr/sbin/realm join --user={{ common_domain_admin_simple_name }}@{{ ad_domain }} --computer-ou={{ ad_centos_ou_membership }} {{ ad_domain }}
     responses:
       Password for *: "{{ ad_new_domain_admin_password }}"
   become: true
@@ -182,7 +182,7 @@
 
 - name: Join system to AD
   expect:
-    command: /bin/bash -c "/usr/sbin/realm join {{ ad_domain }} --computer-ou='{{ ad_lin_ou_membership }}' --user={{ common_domain_admin_simple_name }}"
+    command: /bin/bash -c "/usr/sbin/realm join {{ ad_domain }} --computer-ou='{{ ad_ubu_ou_membership }}' --user={{ common_domain_admin_simple_name }}"
     responses:
       (?i)Password: "{{ ad_new_domain_admin_password }}"  
   ignore_errors: yes
