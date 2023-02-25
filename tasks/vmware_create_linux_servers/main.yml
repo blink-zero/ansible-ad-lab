@@ -126,12 +126,28 @@
 
   # Join Domain (Ubuntu 18.04, 20.04, 22.04)
 
-- name: Ubuntu - Install the required packages
+- name: Ubuntu 18.04 - Install the required packages
   apt:
     name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python-pip
     state: present
   become: true
-  when: inventory_template_name.find("ubuntu") != -1
+  when: inventory_template_name.find("ubuntu-18.04") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu 20.04 - Install the required packages
+  apt:
+    name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python3-pip
+    state: present
+  become: true
+  when: inventory_template_name.find("ubuntu-20.04") != -1
+  delegate_to: '{{ inventory_hostname }}'
+
+- name: Ubuntu 22.04 - Install the required packages
+  apt:
+    name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python3-pip
+    state: present
+  become: true
+  when: inventory_template_name.find("ubuntu-22.04") != -1
   delegate_to: '{{ inventory_hostname }}'
 
 - name: Ubuntu - Install pexpect using pip
