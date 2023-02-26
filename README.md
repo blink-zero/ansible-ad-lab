@@ -238,6 +238,18 @@ vsphere_vm_type: "thin"
 ### v1.0.0
 * Initial Release
 
+## License
+
+MIT
+
+## Authors
+
+- Travis Anderson ([@blink-zero](https://github.com/blink-zero/))
+
+## Contributing
+
+Feel free to open issues, contribute and submit your Pull Requests.
+
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
