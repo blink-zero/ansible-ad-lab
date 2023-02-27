@@ -109,7 +109,6 @@ pip install -r requirements.txt
 ```
 * Run [config.sh](https://github.com/blink-zero/ansible-ad-lab/blob/main/config.sh) to rename example var files and inventory file
 ```sh
-chmod +x config.sh
 ./config.sh
 ```
 * Modify vars/*.yml (See [Examples](https://github.com/blink-zero/ansible-ad-lab#varsad_varsyml-configuration-example))
@@ -223,7 +222,13 @@ vsphere_vm_type: "thin"
 
 
 ## Version History
-### v1.2.1 (Latest)
+### v1.3.0 (Latest)
+* Removal of realm discover for ubuntu
+* Modification of config.sh
+    * Now executable on clone
+* Minor readme updates
+* Ubuntu 18.04 - python-pip changed to python3-pip
+### v1.2.1
 * Minor readme updates
 ### v1.2.0
 * Added GUI to Linux Client machines
