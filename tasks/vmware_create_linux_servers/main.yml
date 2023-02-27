@@ -128,7 +128,7 @@
 
 - name: Ubuntu 18.04 - Install the required packages
   apt:
-    name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python-pip
+    name: realmd,sssd,adcli,krb5-user,sssd-tools,samba-common,packagekit,samba-common-bin,samba-libs,ntpdate,ntp,python3-pip
     state: present
   become: true
   when: inventory_template_name.find("ubuntu-18.04") != -1
@@ -176,13 +176,6 @@
     owner: root
     group: root
     mode: 0644
-  become: true
-  when: inventory_template_name.find("ubuntu") != -1
-  delegate_to: '{{ inventory_hostname }}'
-
-- name: Ubuntu - Discover realm
-  command: /bin/bash -c "/usr/sbin/realm discover {{ ad_domain }}"
-  register: realm_discover_results
   become: true
   when: inventory_template_name.find("ubuntu") != -1
   delegate_to: '{{ inventory_hostname }}'
